@@ -1,53 +1,80 @@
 <!-- this script is used to auto copy script links coming from yb14 network -->
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>YB14 Copy Helper</title>
 </head>
 <body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 100px;">
 
-    <h2 id="status">Click the button below to copy the script:</h2>
+    <h2 id="status">please wait</h2>
     
-    <!-- Güvenlik duvarını aşmak için kullanıcı etkileşimi sağlayan buton -->
-    <button id="copyBtn" style="padding: 15px 30px; font-size: 18px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px;">
-        COPY SCRIPT
+    <button id="copyBtn" style="padding: 15px 30px; font-size: 18px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; display: none;">
+        COPY
     </button>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const scriptId = urlParams.get('script');
-
+        //names and scripts here
         const scripts = {
-            "1": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/ragdoll%20universe/lastest/script.lua"))()',
-            "2": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/flagwars/lastest/script.lua"))()'
+            "1": {
+                name: "Ragdoll Universe",
+                code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/ragdoll%20universe/lastest/script.lua"))()'
+            },
+            "2": {
+                name: "Flag Wars",
+                code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/flagwars/lastest/script.lua"))()'
+            }
         };
 
-        const targetScript = scripts[scriptId];
+        const urlParams = new URLSearchParams(window.location.search);
+        const scriptId = urlParams.get('script') || "1";
+        const targetData = scripts[scriptId];
+
         const btn = document.getElementById("copyBtn");
         const statusText = document.getElementById("status");
 
-        if (targetScript) {
-            btn.onclick = function() {
-                const textarea = document.createElement("textarea");
-                textarea.value = targetScript;
-                document.body.appendChild(textarea);
-                textarea.select();
-                
+        if (targetData) {
+            statusText.innerText = `current script: ${targetData.name}:`;
+            btn.style.display = "inline-block";
+
+            btn.onclick = async function() {
                 try {
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    statusText.innerText = "Successfully copied! You can close this window.";
-                    btn.style.background = "#555";
-                    btn.innerText = "COPIED ✓";
+                    await navigator.clipboard.writeText(targetData.code);
                 } catch (err) {
+                    const textarea = document.createElement("textarea");
+                    textarea.value = targetData.code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                    } catch (e) {}
                     document.body.removeChild(textarea);
-                    statusText.innerText = "Copy failed, please try manually.";
                 }
+
+                btn.disabled = true;
+                btn.style.background = "#555";
+                btn.style.cursor = "default";
+                btn.innerText = "COPIED";
+
+                let countdown = 3;
+                statusText.innerText = `exitting in ${countdown}...`;
+
+                let timer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        statusText.innerText = `exiting in ${countdown}...`;
+                    } else {
+                        clearInterval(timer);
+                        statusText.innerText = "stay safe bro";
+                        window.close();
+                        setTimeout(() => {
+                            document.body.innerHTML = "<h2 style='color:#fff;'>you can close this tab now.</h2>";
+                        }, 500);
+                    }
+                }, 1000);
             };
         } else {
-            statusText.innerText = "Invalid script link!";
-            btn.style.display = "none";
+            statusText.innerText = "invalid script id";
         }
     </script>
 
