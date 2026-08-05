@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>YB14 Copy Helper</title>
 </head>
-<body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 100px;">
+<body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 80px; position: relative; min-height: 100vh; box-sizing: border-box;">
 
     <h2 id="status">please wait</h2>
     
@@ -13,15 +13,24 @@
         COPY
     </button>
 
+    
+    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);">
+        <a href="discord.gg/FJyhP6uTby" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block;">
+            discord
+        </a>
+    </div>
+
     <script>
-        //names and scripts here
+        // names, scripts and status here 1=active
         const scripts = {
             "1": {
                 name: "Ragdoll Universe",
+                status: 1,
                 code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/ragdoll%20universe/lastest/script.lua"))()'
             },
             "2": {
                 name: "Flag Wars",
+                status: 0,
                 code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/flagwars/lastest/script.lua"))()'
             }
         };
@@ -34,45 +43,64 @@
         const statusText = document.getElementById("status");
 
         if (targetData) {
-            statusText.innerText = `current script: ${targetData.name}:`;
-            btn.style.display = "inline-block";
+            if (targetData.status === 1) {
+                // Script Aktifse
+                statusText.innerText = `current script: ${targetData.name}`;
+                btn.style.display = "inline-block";
 
-            btn.onclick = async function() {
-                try {
-                    await navigator.clipboard.writeText(targetData.code);
-                } catch (err) {
-                    const textarea = document.createElement("textarea");
-                    textarea.value = targetData.code;
-                    document.body.appendChild(textarea);
-                    textarea.select();
+                btn.onclick = async function() {
                     try {
-                        document.execCommand('copy');
-                    } catch (e) {}
-                    document.body.removeChild(textarea);
-                }
-
-                btn.disabled = true;
-                btn.style.background = "#555";
-                btn.style.cursor = "default";
-                btn.innerText = "COPIED";
-
-                let countdown = 3;
-                statusText.innerText = `exitting in ${countdown}...`;
-
-                let timer = setInterval(() => {
-                    countdown--;
-                    if (countdown > 0) {
-                        statusText.innerText = `exiting in ${countdown}...`;
-                    } else {
-                        clearInterval(timer);
-                        statusText.innerText = "stay safe bro";
-                        window.close();
-                        setTimeout(() => {
-                            document.body.innerHTML = "<h2 style='color:#fff;'>you can close this tab now.</h2>";
-                        }, 500);
+                        await navigator.clipboard.writeText(targetData.code);
+                    } catch (err) {
+                        const textarea = document.createElement("textarea");
+                        textarea.value = targetData.code;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                            document.execCommand('copy');
+                        } catch (e) {}
+                        document.body.removeChild(textarea);
                     }
-                }, 1000);
-            };
+
+                    btn.disabled = true;
+                    btn.style.background = "#555";
+                    btn.style.cursor = "default";
+                    btn.innerText = "COPIED";
+
+                    let countdown = 3;
+                    statusText.innerText = `exiting in ${countdown}...`;
+
+                    let timer = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            statusText.innerText = `exiting in ${countdown}...`;
+                        } else {
+                            clearInterval(timer);
+                            statusText.innerText = "stay safe bro";
+                            window.close();
+                            setTimeout(() => {
+                                document.body.innerHTML = "<h2 style='color:#fff;'>you can close this tab now.</h2>";
+                            }, 500);
+                        }
+                    }, 1000);
+                };
+            } else {
+                // Script Devre Dışıysa (status: 0)
+                statusText.innerText = `current script: ${targetData.name}`;
+                btn.style.display = "inline-block";
+                btn.disabled = true;
+                btn.style.background = "#dc3545"; // Kırmızı renk
+                btn.style.cursor = "not-allowed";
+                btn.innerText = "DISABLED";
+
+                // Altına veya üstüne ek uyarı metni ekleyebiliriz
+                const errorMsg = document.createElement("p");
+                errorMsg.style.color = "#dc3545";
+                errorMsg.style.fontWeight = "bold";
+                errorMsg.style.marginTop = "15px";
+                errorMsg.innerText = "this script is disabled. check discord for more information";
+                document.body.appendChild(errorMsg);
+            }
         } else {
             statusText.innerText = "invalid script id";
         }
