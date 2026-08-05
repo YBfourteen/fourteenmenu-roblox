@@ -13,7 +13,6 @@
         COPY
     </button>
 
-    
     <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);">
         <a href="https://discord.gg/FJyhP6uTby" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block;">
             discord
@@ -37,6 +36,7 @@
                 name: "test id",
                 status: 0,
                 code: 'if you see this in your clipboard i wrote something wrong or you fiddled with something'            
+            }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -48,7 +48,7 @@
 
         if (targetData) {
             if (targetData.status === 1) {
-                // Script Aktifse
+         
                 statusText.innerText = `current script: ${targetData.name}`;
                 btn.style.display = "inline-block";
 
@@ -82,7 +82,6 @@
                             clearInterval(timer);
                             statusText.innerText = "stay safe bro";
                             
-                            
                             setTimeout(() => {
                                 window.close();
                                 
@@ -94,7 +93,6 @@
                     }, 1000);
                 };
             } else {
-                
                 statusText.innerText = `current script: ${targetData.name}`;
                 btn.style.display = "inline-block";
                 btn.disabled = true;
