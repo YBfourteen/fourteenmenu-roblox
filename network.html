@@ -1,31 +1,17 @@
-<!--  this script is used to auto copy script links coming from yb14 network  -->
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- this script is used to auto copy script links coming from yb14 network -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <title>YB14 Copy Helper</title>
 </head>
-<body style="background: #111; color: #fff;
-    <h2 id="status">wait< font-family: sans-serif; text-align: center; padding-top: 50px;">
-/h2>
+<body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 50px;">
+
+    <h2 id="status">Copying script...</h2>
 
     <script>
-
         const urlParams = new URLSearchParams(window.location.search);
         const scriptId = urlParams.get('script');
-
 
         const scripts = {
             "1": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/YBfourteen/fourteenmenu-roblox/refs/heads/main/ragdoll%20universe/lastest/script.lua"))()',
@@ -35,13 +21,21 @@
         const targetScript = scripts[scriptId];
 
         if (targetScript) {
-            navigator.clipboard.writeText(targetScript).then(() => {
-                document.getElementById("status").innerText = "copied. you can close this window.";
-            }).catch(err => {
-                document.getElementById("status").innerText = "copy unsuccesful";
-            });
+            const textarea = document.createElement("textarea");
+            textarea.value = targetScript;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                document.getElementById("status").innerText = "Copied. You can close this window.";
+            } catch (err) {
+                document.body.removeChild(textarea);
+                document.getElementById("status").innerText = "Copy unsuccessful.";
+            }
         } else {
-            document.getElementById("status").innerText = "invalid script link";
+            document.getElementById("status").innerText = "Invalid script link.";
         }
     </script>
 
