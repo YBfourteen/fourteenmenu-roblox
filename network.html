@@ -2,12 +2,17 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <ter charset="UTF-8">
+    <meta charset="UTF-8">
     <title>YB14 Copy Helper</title>
 </head>
-<body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 50px;">
+<body style="background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 100px;">
 
-    <h2 id="status">Copying script...</h2>
+    <h2 id="status">Click the button below to copy the script:</h2>
+    
+    <!-- Güvenlik duvarını aşmak için kullanıcı etkileşimi sağlayan buton -->
+    <button id="copyBtn" style="padding: 15px 30px; font-size: 18px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px;">
+        COPY SCRIPT
+    </button>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -19,23 +24,30 @@
         };
 
         const targetScript = scripts[scriptId];
+        const btn = document.getElementById("copyBtn");
+        const statusText = document.getElementById("status");
 
         if (targetScript) {
-            const textarea = document.createElement("textarea");
-            textarea.value = targetScript;
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                document.getElementById("status").innerText = "Copied. You can close this window.";
-            } catch (err) {
-                document.body.removeChild(textarea);
-                document.getElementById("status").innerText = "Copy unsuccessful.";
-            }
+            btn.onclick = function() {
+                const textarea = document.createElement("textarea");
+                textarea.value = targetScript;
+                document.body.appendChild(textarea);
+                textarea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    statusText.innerText = "Successfully copied! You can close this window.";
+                    btn.style.background = "#555";
+                    btn.innerText = "COPIED ✓";
+                } catch (err) {
+                    document.body.removeChild(textarea);
+                    statusText.innerText = "Copy failed, please try manually.";
+                }
+            };
         } else {
-            document.getElementById("status").innerText = "Invalid script link.";
+            statusText.innerText = "Invalid script link!";
+            btn.style.display = "none";
         }
     </script>
 
