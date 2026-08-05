@@ -15,7 +15,6 @@
 
     
     <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);">
-        <!-- Başına https:// eklendi, böylece doğru adrese yönlendirecek -->
         <a href="https://discord.gg/FJyhP6uTby" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block;">
             discord
         </a>
@@ -78,19 +77,24 @@
                         } else {
                             clearInterval(timer);
                             statusText.innerText = "stay safe bro";
-                            window.close();
+                            
+                            
                             setTimeout(() => {
-                                document.body.innerHTML = "<h2 style='color:#fff;'>you can close this tab now.</h2>";
-                            }, 500);
+                                window.close();
+                                
+                                setTimeout(() => {
+                                    statusText.innerText = "you can close this tab if it did not exit";
+                                }, 400);
+                            }, 1500);
                         }
                     }, 1000);
                 };
             } else {
-                // Script Devre Dışıysa (status: 0)
+                
                 statusText.innerText = `current script: ${targetData.name}`;
                 btn.style.display = "inline-block";
                 btn.disabled = true;
-                btn.style.background = "#dc3545"; // Kırmızı renk
+                btn.style.background = "#dc3545"; 
                 btn.style.cursor = "not-allowed";
                 btn.innerText = "DISABLED";
 
